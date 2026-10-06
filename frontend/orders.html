@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My orders - My Mart</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header id="navbar" class="navbar"></header>
+<main class="container">
+  <div class="section-title"><h2>📦 My orders</h2><span class="muted small" id="count"></span></div>
+  <div id="list"><div class="skeleton" style="height:200px"></div></div>
+  <div class="pagination" id="pager"></div>
+</main>
+<footer id="footer"></footer>
+<script src="/static/js/app.js"></script>
+<script>
+  const STEPS = ["Placed", "Packed", "Shipped", "Delivered"];
+
+  function timeline(status) {
+    if (status === "Cancelled") return `<div class="alert alert-error small" style="margin:6px 0 0">This order was cancelled.</div>`;
+    const idx = STEPS.indexOf(status);
+    return `<div class="timeline">${STEPS.map((s, i) => `<div class="step ${i <= idx ? "done" : ""}">${s}</div>`).join("")}</div>`;
+  }
+
+  function orderCard(o) {
+    return `
+      <div class="card order-card" id="order-${o.id}">
+        <div class="order-head">
+          <div><div class="muted small">Order</div><b>${esc(o.order_number)}</b></div>
+          <div><div class="muted small">Placed on</div>${fmtDate(o.created_at)}</div>
+          <div><div class="muted small">Payment</div>${esc(o.payment_method)} ${statusBadge(o.payment_status)}</div>
+          <div><div class="muted small">Total</div><b>${money(o.total)}</b></div>
+          <span class="spacer"></span>
+          ${statusBadge(o.status)}
+          ${o.can_cancel ? `<button class="btn btn-sm btn-light" onclick="cancelOrder(${o.id})">Cancel</button>` : ""}
+        </div>
+        <div class="order-items">
+          ${timeline(o.status)}
+          ${o.items.map(i => `<div class="order-item"><span>${i.emoji}</span><span style="flex:1">${esc(i.product_name)} <span class="muted">× ${i.quantity} @ ${money(i.unit_price)}</span></span><b>${money(i.line_total)}</b></div>`).join("")}
+          <div class="muted small mt">Items ${money(o.subtotal)} + delivery ${money(o.delivery_fee)} · Deliver to ${esc(o.delivery_city || "-")}</div>
+        </div>
+      </div>`;
+  }
+
+  async function load(page = 1) {
+    const data = await api(`/api/orders?page=${page}`);
+    $("#count").textContent = `${data.total} order(s)`;
+    $("#list").innerHTML = data.items.length ? data.items.map(orderCard).join("")
+      : `<div class="card empty"><div class="big">📦</div><h3>No orders yet</h3><a class="btn" href="/">Start shopping</a></div>`;
+    pagination($("#pager"), data, p => { load(p); window.scrollTo({ top: 0 }); });
+  }
+
+  async function cancelOrder(id) {
+    if (!confirm("Cancel this order? Items will be returned to stock.")) return;
+    try {
+      const { order, message } = await api(`/api/orders/${id}/cancel`, { method: "POST" });
+      $(`#order-${id}`).outerHTML = orderCard(order);
+      toast(message, "success");
+    } catch (e) { toast(e.message, "error"); }
+  }
+
+  ready.then(() => { if (requireLogin()) load(); });
+</script>
+</body>
+</html>

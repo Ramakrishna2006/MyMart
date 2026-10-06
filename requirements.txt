@@ -1,0 +1,10 @@
+# MyMart - Python dependencies
+# Install with:  pip install -r requirements.txt
+
+Flask>=3.0,<4                # web framework (REST API + serves the frontend)
+Flask-SQLAlchemy>=3.1,<4     # ORM: Python classes <-> database tables
+SQLAlchemy>=2.0,<3           # database toolkit used by Flask-SQLAlchemy
+Flask-Login>=0.6.3,<1        # login sessions / "remember me"
+Werkzeug>=3.0,<4             # password hashing (installed with Flask)
+qrcode[pil]>=7.4             # UPI QR code image at checkout (pulls in Pillow)
+python-dotenv>=1.0           # reads settings from the .env file

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your cart - My Mart</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header id="navbar" class="navbar"></header>
+<main class="container" id="page"><div class="skeleton mt-lg" style="height:300px"></div></main>
+<footer id="footer"></footer>
+<script src="/static/js/app.js"></script>
+<script>
+  function render(cart) {
+    setCartCount(cart.items_count);
+    if (!cart.items.length) {
+      $("#page").innerHTML = `<div class="card mt-lg empty"><div class="big">🛒</div><h2>Your cart is empty</h2>
+        <p>Add some fresh groceries to get started.</p><a class="btn btn-lg" href="/">Start shopping</a></div>`;
+      return;
+    }
+    const pct = Math.min(100, (cart.subtotal / cart.free_delivery_above) * 100);
+    $("#page").innerHTML = `
+      <div class="layout-2">
+        <section class="card card-pad">
+          <div class="row"><h1 style="margin:0;font-size:24px">🛒 Your cart</h1><span class="muted">${cart.items_count} item(s)</span>
+            <span class="spacer"></span><button class="btn btn-ghost btn-sm" id="clear">🗑️ Clear cart</button></div>
+          <div class="mt">
+          ${cart.items.map(it => `
+            <div class="cart-line">
+              <a class="emoji" href="/product?id=${it.product.id}">${it.product.emoji}</a>
+              <div>
+                <a class="name" href="/product?id=${it.product.id}" style="font-weight:700;color:var(--ink)">${esc(it.product.name)}</a>
+                <div class="muted small">${esc(it.product.unit || "")} · ${money(it.product.price)} each
+                  ${it.product.mrp > it.product.price ? `<span class="mrp">${money(it.product.mrp)}</span>` : ""}</div>
+                ${!it.available ? `<div class="stock-out">Only ${it.product.stock} in stock - please reduce quantity</div>` : ""}
+                <button class="btn btn-ghost btn-sm" style="padding-left:0" onclick="removeLine(${it.product.id})">Remove</button>
+              </div>
+              <div class="stepper">
+                <button onclick="setQty(${it.product.id}, ${it.quantity - 1})">−</button>
+                <span>${it.quantity}</span>
+                <button onclick="setQty(${it.product.id}, ${it.quantity + 1})">+</button>
+              </div>
+              <div class="line-total">${money(it.line_total)}</div>
+            </div>`).join("")}
+          </div>
+        </section>
+        <aside class="card card-pad sticky">
+          <h3>Order summary</h3>
+          ${cart.delivery_fee > 0
+            ? `<div class="small">Add <b>${money(cart.amount_for_free_delivery)}</b> more for <b>FREE delivery</b></div>
+               <div class="progress"><div style="width:${pct}%"></div></div>`
+            : `<div class="alert alert-success small" style="margin-bottom:8px">🎉 You've unlocked free delivery!</div>`}
+          <div class="summary-row"><span>Items (${cart.items_count})</span><span>${money(cart.subtotal)}</span></div>
+          <div class="summary-row"><span>Delivery</span><span>${cart.delivery_fee ? money(cart.delivery_fee) : "<b style='color:var(--green)'>FREE</b>"}</span></div>
+          ${cart.savings > 0 ? `<div class="summary-row" style="color:var(--green)"><span>You save (vs MRP)</span><span>− ${money(cart.savings)}</span></div>` : ""}
+          <div class="summary-row total"><span>Total</span><span>${money(cart.total)}</span></div>
+          <a class="btn btn-block btn-lg mt ${cart.items.every(i => i.available) ? "" : "disabled"}" href="/checkout"
+             ${cart.items.every(i => i.available) ? "" : 'onclick="return false" style="opacity:.5"'}>Proceed to checkout →</a>
+          <a class="btn btn-block btn-light mt" href="/">← Continue shopping</a>
+        </aside>
+      </div>`;
+    $("#clear").onclick = async () => { render(await api("/api/cart", { method: "DELETE" })); toast("Cart cleared"); };
+  }
+
+  async function setQty(productId, quantity) {
+    try { render(await api(`/api/cart/${productId}`, { method: "PATCH", body: { quantity } })); }
+    catch (e) { toast(e.message, "error"); }
+  }
+  async function removeLine(productId) {
+    render(await api(`/api/cart/${productId}`, { method: "DELETE" }));
+  }
+
+  ready.then(async () => { if (requireLogin()) render(await api("/api/cart")); });
+</script>
+</body>
+</html>

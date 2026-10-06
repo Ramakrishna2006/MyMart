@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - My Mart</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header id="navbar" class="navbar"></header>
+<main class="auth-wrap">
+  <div class="card card-pad auth-card">
+    <h1>Welcome back 👋</h1>
+    <p class="muted">Log in to shop, track orders and manage your cart.</p>
+    <div id="error" class="alert alert-error hidden"></div>
+    <form id="form">
+      <div class="field"><label for="email">Email</label><input class="input" id="email" type="email" required autocomplete="email"></div>
+      <div class="field"><label for="password">Password</label><input class="input" id="password" type="password" required autocomplete="current-password"></div>
+      <label class="checkbox mb"><input type="checkbox" id="remember"> Keep me logged in</label>
+      <button class="btn btn-block btn-lg" id="submit">Log in</button>
+    </form>
+    <p class="center mt">New to My Mart? <a href="/register">Create an account</a></p>
+
+    <div class="demo-box">
+      <b>🧪 Demo accounts</b> (from the sample dataset)<br>
+      Customer: <code>ananya.gupta1@example.com</code> / <code>Customer@123</code><br>
+      Admin: <code>admin@mymart.com</code> / <code>Admin@123</code><br>
+      <button class="btn btn-sm btn-outline" type="button" onclick="fill('ananya.gupta1@example.com','Customer@123')">Use customer</button>
+      <button class="btn btn-sm btn-outline" type="button" onclick="fill('admin@mymart.com','Admin@123')">Use admin</button>
+    </div>
+  </div>
+</main>
+<footer id="footer"></footer>
+<script src="/static/js/app.js"></script>
+<script>
+  function fill(e, p) { $("#email").value = e; $("#password").value = p; }
+
+  ready.then(user => { if (user) location.href = qs("next") || (user.is_admin ? "/admin" : "/"); });
+
+  $("#form").onsubmit = async (ev) => {
+    ev.preventDefault();
+    $("#error").classList.add("hidden");
+    $("#submit").disabled = true;
+    try {
+      const data = await api("/api/auth/login", { method: "POST", body: {
+        email: $("#email").value, password: $("#password").value, remember: $("#remember").checked } });
+      toast(data.message, "success");
+      const next = qs("next");
+      location.href = next && next.startsWith("/") ? next : (data.user.is_admin ? "/admin" : "/");
+    } catch (e) {
+      $("#error").textContent = e.message;
+      $("#error").classList.remove("hidden");
+      $("#submit").disabled = false;
+    }
+  };
+</script>
+</body>
+</html>

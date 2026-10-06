@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin dashboard - My Mart</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠️</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header id="navbar" class="navbar"></header>
+<main class="container">
+  <div class="row mt-lg">
+    <h1 style="margin:0;font-size:28px">🛠️ Admin dashboard</h1>
+    <span class="spacer"></span>
+    <a class="btn btn-outline" href="/dataset">📊 Dataset explorer</a>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="overview">📈 Overview</button>
+    <button class="tab" data-tab="products">📦 Products</button>
+    <button class="tab" data-tab="orders">🧾 Orders</button>
+    <button class="tab" data-tab="customers">👥 Customers</button>
+  </div>
+
+  <!-- ============ OVERVIEW ============ -->
+  <section id="tab-overview">
+    <div class="kpis" id="kpis"></div>
+    <div class="charts">
+      <div class="card card-pad chart-card wide"><h3>Revenue by month</h3><div id="c-month"></div></div>
+      <div class="card card-pad chart-card"><h3>Sales by category</h3><div id="c-category"></div></div>
+      <div class="card card-pad chart-card"><h3>Top 10 products (units sold)</h3><div id="c-top"></div></div>
+      <div class="card card-pad chart-card"><h3>Payment methods (orders)</h3><div id="c-payment"></div></div>
+      <div class="card card-pad chart-card"><h3>Orders by status</h3><div id="c-status"></div></div>
+      <div class="card card-pad chart-card"><h3>Orders by day of week</h3><div id="c-weekday"></div></div>
+      <div class="card card-pad chart-card"><h3>Top cities (revenue)</h3><div id="c-city"></div></div>
+      <div class="card card-pad chart-card wide"><h3>⚠️ Low stock (≤ <span id="low-th"></span> units)</h3><div id="low-stock"></div></div>
+    </div>
+  </section>
+
+  <!-- ============ PRODUCTS ============ -->
+  <section id="tab-products" class="hidden">
+    <div class="row mb">
+      <input class="input" id="p-q" placeholder="Search name or SKU…" style="max-width:300px">
+      <select class="input" id="p-cat" style="width:auto"><option value="">All categories</option></select>
+      <span class="spacer"></span>
+      <button class="btn" id="p-add">+ Add product</button>
+    </div>
+    <div class="table-wrap"><table class="table" id="p-table"></table></div>
+    <div class="pagination" id="p-pager"></div>
+  </section>
+
+  <!-- ============ ORDERS ============ -->
+  <section id="tab-orders" class="hidden">
+    <div class="row mb">
+      <input class="input" id="o-q" placeholder="Order no, customer name or email…" style="max-width:320px">
+      <select class="input" id="o-status" style="width:auto">
+        <option value="">All statuses</option><option>Placed</option><option>Packed</option>
+        <option>Shipped</option><option>Delivered</option><option>Cancelled</option>
+      </select>
+    </div>
+    <div class="table-wrap"><table class="table" id="o-table"></table></div>
+    <div class="pagination" id="o-pager"></div>
+  </section>
+
+  <!-- ============ CUSTOMERS ============ -->
+  <section id="tab-customers" class="hidden">
+    <div class="row mb"><input class="input" id="c-q" placeholder="Search name, email or city…" style="max-width:320px"><span class="muted small" id="c-count"></span></div>
+    <div class="table-wrap"><table class="table" id="c-table"></table></div>
+  </section>
+</main>
+
+<!-- Product modal -->
+<div class="modal-backdrop hidden" id="modal">
+  <form class="card modal" id="p-form">
+    <div class="modal-head"><h3 id="m-title">Add product</h3><button type="button" class="btn btn-ghost btn-sm" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div id="m-error" class="alert alert-error hidden"></div>
+      <div class="field"><label>Name *</label><input class="input" name="name" required></div>
+      <div class="grid-2">
+        <div class="field"><label>Category *</label><select class="input" name="category_id" required id="m-cat"></select></div>
+        <div class="field"><label>Brand</label><input class="input" name="brand"></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>Selling price (₹) *</label><input class="input" name="price" type="number" step="0.01" min="0" required></div>
+        <div class="field"><label>MRP (₹)</label><input class="input" name="mrp" type="number" step="0.01" min="0"></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>Stock *</label><input class="input" name="stock" type="number" min="0" required></div>
+        <div class="field"><label>Pack size / unit</label><input class="input" name="unit" placeholder="1 kg, 500 ml, 6 pcs"></div>
+      </div>
+      <div class="field"><label>Description</label><textarea class="input" name="description"></textarea></div>
+      <div class="field"><label>Image URL (optional)</label><input class="input" name="image_url" placeholder="https://… (emoji is used when empty)"></div>
+      <label class="checkbox"><input type="checkbox" name="is_veg" checked> Vegetarian</label>
+    </div>
+    <div class="modal-foot"><button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button><button class="btn" id="m-save">Save</button></div>
+  </form>
+</div>
+
+<footer id="footer"></footer>
+<script src="/static/js/app.js"></script>
+<script src="/static/js/charts.js"></script>
+<script>
+  let categories = [], editing = null;
+  const loaded = {};
+
+  /* ---------- tabs ---------- */
+  $$(".tab").forEach(t => t.onclick = () => showTab(t.dataset.tab));
+  function showTab(name) {
+    $$(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+    ["overview", "products", "orders", "customers"].forEach(n => $(`#tab-${n}`).classList.toggle("hidden", n !== name));
+    history.replaceState(null, "", "#" + name);
+    if (!loaded[name]) { loaded[name] = true; ({ overview: loadOverview, products: loadProducts, orders: loadOrders, customers: loadCustomers })[name](); }
+  }
+
+  /* ---------- overview ---------- */
+  async function loadOverview() {
+    const [s, a] = await Promise.all([api("/api/admin/stats"), api("/api/admin/analytics")]);
+    const kpi = (icon, label, value) => `<div class="card kpi"><span class="icon">${icon}</span><div class="label">${label}</div><div class="value">${value}</div></div>`;
+    $("#kpis").innerHTML =
+      kpi("💰", "Total revenue", moneyShort(s.revenue)) + kpi("🧾", "Orders", s.orders) +
+      kpi("🛍️", "Avg order value", money(s.avg_order_value)) + kpi("👥", "Customers", s.customers) +
+      kpi("📦", "Products", s.products) + kpi("⏳", "Orders in progress", s.pending_orders);
+
+    lineChart($("#c-month"), a.sales_by_month.map(m => ({
+      label: new Date(m.month + "-01").toLocaleString("en-IN", { month: "short", year: "2-digit" }), value: m.revenue })), { format: moneyShort, width: 1100, height: 260 });
+    hbarList($("#c-category"), a.sales_by_category.map(c => ({ label: `${c.emoji} ${c.category}`, value: c.revenue })), { format: moneyShort });
+    hbarList($("#c-top"), a.top_products.map(p => ({ label: p.name, value: p.units })));
+    donutChart($("#c-payment"), a.payment_methods.map(p => ({ label: p.method === "COD" ? "Cash on delivery" : p.method, value: p.orders })),
+      { centerLabel: "Orders", colors: { UPI: "#0c8a4f", "Cash on delivery": "#f59e0b" } });
+    donutChart($("#c-status"), Object.entries(a.orders_by_status).map(([k, v]) => ({ label: k, value: v })),
+      { centerLabel: "Orders", colors: { Placed: "#2563eb", Packed: "#f59e0b", Shipped: "#7c3aed", Delivered: "#0c8a4f", Cancelled: "#dc3545" } });
+    barChart($("#c-weekday"), a.orders_by_weekday.map(d => ({ label: d.day, value: d.orders })), { height: 200 });
+    hbarList($("#c-city"), a.top_cities.map(c => ({ label: c.city, value: c.revenue })), { format: moneyShort });
+
+    $("#low-th").textContent = s.low_stock_threshold;
+    $("#low-stock").innerHTML = s.low_stock.length ? `<div class="table-wrap"><table class="table">
+      <tr><th>Product</th><th>SKU</th><th>Category</th><th class="num">Stock</th><th></th></tr>
+      ${s.low_stock.map(p => `<tr><td>${p.emoji} ${esc(p.name)}</td><td><code>${esc(p.sku)}</code></td><td>${esc(p.category)}</td>
+        <td class="num"><b style="color:${p.stock === 0 ? "var(--red)" : "#b45309"}">${p.stock}</b></td>
+        <td><button class="btn btn-sm btn-outline" onclick="restock(${p.id}, ${p.stock})">+ Restock</button></td></tr>`).join("")}
+    </table></div>` : `<p class="muted">All products are well stocked. 👍</p>`;
+  }
+
+  async function restock(id, current) {
+    const add = prompt("How many units to add?", "50");
+    if (!add || isNaN(add)) return;
+    await api(`/api/admin/products/${id}`, { method: "PUT", body: { stock: current + Number(add) } });
+    toast("Stock updated", "success");
+    loadOverview(); loaded.products = false;
+  }
+
+  /* ---------- products ---------- */
+  const pState = { q: "", category: "", page: 1 };
+  async function loadProducts() {
+    const params = new URLSearchParams({ page: pState.page, per_page: 15 });
+    if (pState.q) params.set("q", pState.q);
+    if (pState.category) params.set("category", pState.category);
+    const data = await api("/api/admin/products?" + params);
+    $("#p-table").innerHTML = `<tr><th>ID</th><th>Product</th><th>SKU</th><th>Category</th><th class="num">MRP</th><th class="num">Price</th><th class="num">Stock</th><th class="num">Rating</th><th></th></tr>` +
+      data.items.map(p => `<tr>
+        <td>${p.id}</td><td>${p.emoji} <b>${esc(p.name)}</b><div class="muted small">${esc(p.brand || "")} · ${esc(p.unit || "")}</div></td>
+        <td><code>${esc(p.sku)}</code></td><td>${esc(p.category)}</td>
+        <td class="num">${money(p.mrp)}</td><td class="num"><b>${money(p.price)}</b>${p.discount_pct ? `<div class="small" style="color:var(--green)">${p.discount_pct}% off</div>` : ""}</td>
+        <td class="num" style="color:${p.stock === 0 ? "var(--red)" : p.stock <= 10 ? "#b45309" : "inherit"};font-weight:700">${p.stock}</td>
+        <td class="num">${p.rating.toFixed(1)}</td>
+        <td style="white-space:nowrap"><button class="btn btn-sm btn-light" onclick='openModal(${JSON.stringify(p).replace(/'/g, "&#39;")})'>Edit</button>
+          <button class="btn btn-sm btn-ghost" style="color:var(--red)" onclick="deleteProduct(${p.id}, '${esc(p.name).replace(/'/g, "")}')">Delete</button></td>
+      </tr>`).join("");
+    pagination($("#p-pager"), data, p => { pState.page = p; loadProducts(); });
+  }
+  $("#p-q").oninput = debounce(e => { pState.q = e.target.value.trim(); pState.page = 1; loadProducts(); });
+  $("#p-cat").onchange = e => { pState.category = e.target.value; pState.page = 1; loadProducts(); };
+  $("#p-add").onclick = () => openModal(null);
+
+  function openModal(p) {
+    editing = p;
+    const f = $("#p-form");
+    f.reset();
+    $("#m-error").classList.add("hidden");
+    $("#m-title").textContent = p ? `Edit: ${p.name}` : "Add product";
+    if (p) ["name", "brand", "price", "mrp", "stock", "unit", "description", "image_url"].forEach(k => f.elements[k].value = p[k] ?? "");
+    f.elements.category_id.value = p ? p.category_id : categories[0].id;
+    f.elements.is_veg.checked = p ? p.is_veg : true;
+    $("#modal").classList.remove("hidden");
+  }
+  function closeModal() { $("#modal").classList.add("hidden"); }
+
+  $("#p-form").onsubmit = async (ev) => {
+    ev.preventDefault();
+    const f = ev.target;
+    const body = Object.fromEntries(new FormData(f));
+    body.is_veg = f.elements.is_veg.checked;
+    try {
+      const res = editing
+        ? await api(`/api/admin/products/${editing.id}`, { method: "PUT", body })
+        : await api("/api/admin/products", { method: "POST", body });
+      toast(res.message, "success");
+      closeModal(); loadProducts(); loaded.overview = false;
+    } catch (e) {
+      $("#m-error").textContent = e.message; $("#m-error").classList.remove("hidden");
+    }
+  };
+
+  async function deleteProduct(id, name) {
+    if (!confirm(`Remove "${name}" from the shop?\n(Old orders keep their history.)`)) return;
+    const res = await api(`/api/admin/products/${id}`, { method: "DELETE" });
+    toast(res.message, "success"); loadProducts(); loaded.overview = false;
+  }
+
+  /* ---------- orders ---------- */
+  const oState = { q: "", status: "", page: 1 };
+  async function loadOrders() {
+    const params = new URLSearchParams({ page: oState.page });
+    if (oState.q) params.set("q", oState.q);
+    if (oState.status) params.set("status", oState.status);
+    const data = await api("/api/admin/orders?" + params);
+    $("#o-table").innerHTML = `<tr><th>Order</th><th>Date</th><th>Customer</th><th>Items</th><th class="num">Total</th><th>Payment</th><th>Status</th><th>Update</th></tr>` +
+      (data.items.length ? data.items.map(orderRow).join("") : `<tr><td colspan="8" class="center muted">No orders found</td></tr>`);
+    pagination($("#o-pager"), data, p => { oState.page = p; loadOrders(); });
+  }
+  function orderRow(o) {
+    return `<tr id="orow-${o.id}">
+      <td><b>${esc(o.order_number)}</b></td><td class="small">${fmtDate(o.created_at)}</td>
+      <td>${esc(o.customer?.name || "-")}<div class="muted small">${esc(o.delivery_city || "")}</div></td>
+      <td class="small" title="${esc(o.items.map(i => i.product_name + " ×" + i.quantity).join(", "))}">${o.items.length} lines · ${o.items_count} units</td>
+      <td class="num"><b>${money(o.total)}</b></td>
+      <td>${esc(o.payment_method)} ${statusBadge(o.payment_status)}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td>${o.next_statuses.length ? `<select class="input" style="padding:6px 8px;font-size:13px;width:auto" onchange="updateOrder(${o.id}, this.value)">
+          <option value="">Move to…</option>${o.next_statuses.map(s => `<option>${s}</option>`).join("")}</select>` : `<span class="muted small">Final</span>`}</td>
+    </tr>`;
+  }
+  async function updateOrder(id, status) {
+    if (!status) return;
+    if (status === "Cancelled" && !confirm("Cancel this order and return items to stock?")) { loadOrders(); return; }
+    try {
+      const res = await api(`/api/admin/orders/${id}`, { method: "PATCH", body: { status } });
+      $(`#orow-${id}`).outerHTML = orderRow(res.order);
+      toast(res.message, "success"); loaded.overview = false;
+    } catch (e) { toast(e.message, "error"); }
+  }
+  $("#o-q").oninput = debounce(e => { oState.q = e.target.value.trim(); oState.page = 1; loadOrders(); });
+  $("#o-status").onchange = e => { oState.status = e.target.value; oState.page = 1; loadOrders(); };
+
+  /* ---------- customers ---------- */
+  async function loadCustomers(q = "") {
+    const data = await api("/api/admin/customers" + (q ? "?q=" + encodeURIComponent(q) : ""));
+    $("#c-count").textContent = `${data.customers.length} customer(s)`;
+    $("#c-table").innerHTML = `<tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>City</th><th>Joined</th><th class="num">Orders</th><th class="num">Spent</th></tr>` +
+      data.customers.map(c => `<tr><td>${c.id}</td><td><b>${esc(c.name)}</b></td><td>${esc(c.email)}</td><td>${esc(c.phone || "-")}</td>
+        <td>${esc(c.city || "-")}</td><td class="small">${fmtDate(c.created_at, false)}</td><td class="num">${c.orders}</td><td class="num"><b>${money(c.spent)}</b></td></tr>`).join("");
+  }
+  $("#c-q").oninput = debounce(e => loadCustomers(e.target.value.trim()));
+
+  /* ---------- start ---------- */
+  ready.then(async (user) => {
+    if (!requireLogin()) return;
+    if (!user.is_admin) {
+      document.querySelector("main").innerHTML = `<div class="card empty mt-lg"><div class="big">🔒</div><h2>Admins only</h2><p>Log in with the admin account to see this page.</p><a class="btn" href="/">Back to shop</a></div>`;
+      return;
+    }
+    categories = (await api("/api/categories")).categories;
+    const opts = categories.map(c => `<option value="${c.id}">${c.emoji} ${esc(c.name)}</option>`).join("");
+    $("#p-cat").innerHTML += opts; $("#m-cat").innerHTML = opts;
+    showTab((location.hash || "#overview").slice(1));
+  });
+</script>
+</body>
+</html>

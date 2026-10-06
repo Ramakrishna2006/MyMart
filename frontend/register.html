@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create account - My Mart</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header id="navbar" class="navbar"></header>
+<main class="auth-wrap">
+  <div class="card card-pad auth-card">
+    <h1>Create your account</h1>
+    <p class="muted">It takes less than a minute.</p>
+    <div id="error" class="alert alert-error hidden"></div>
+    <form id="form">
+      <div class="field"><label for="name">Full name</label><input class="input" id="name" required minlength="2" autocomplete="name"></div>
+      <div class="field"><label for="email">Email</label><input class="input" id="email" type="email" required autocomplete="email"></div>
+      <div class="grid-2">
+        <div class="field"><label for="phone">Mobile (optional)</label><input class="input" id="phone" inputmode="numeric" maxlength="10" placeholder="9876543210"></div>
+        <div class="field"><label for="city">City (optional)</label><input class="input" id="city" placeholder="Hyderabad"></div>
+      </div>
+      <div class="field"><label for="password">Password</label><input class="input" id="password" type="password" required minlength="6" autocomplete="new-password" placeholder="At least 6 characters"></div>
+      <button class="btn btn-block btn-lg" id="submit">Create account</button>
+    </form>
+    <p class="center mt">Already have an account? <a href="/login">Log in</a></p>
+  </div>
+</main>
+<footer id="footer"></footer>
+<script src="/static/js/app.js"></script>
+<script>
+  ready.then(user => { if (user) location.href = "/"; });
+  $("#form").onsubmit = async (ev) => {
+    ev.preventDefault();
+    $("#error").classList.add("hidden");
+    $("#submit").disabled = true;
+    try {
+      await api("/api/auth/register", { method: "POST", body: {
+        name: $("#name").value, email: $("#email").value, phone: $("#phone").value,
+        city: $("#city").value, password: $("#password").value } });
+      toast("Account created - welcome to My Mart!", "success");
+      setTimeout(() => (location.href = "/"), 500);
+    } catch (e) {
+      $("#error").textContent = e.message;
+      $("#error").classList.remove("hidden");
+      $("#submit").disabled = false;
+    }
+  };
+</script>
+</body>
+</html>

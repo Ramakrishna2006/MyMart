@@ -1,0 +1,2 @@
+-r requirements.txt
+pytest>=8.0                  # optional: nicer test runner (unittest works without it)

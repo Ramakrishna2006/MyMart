@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Local settings & secrets
+.env
+
+# Database (re-created from data/*.csv on first run)
+backend/instance/
+*.db
+*.sqlite3
+
+# Exports created by `python manage.py export`
+exports/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

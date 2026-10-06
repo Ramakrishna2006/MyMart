@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About the project - My Mart</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header id="navbar" class="navbar"></header>
+<main class="container">
+  <section class="ds-hero">
+    <h1>ℹ️ How My Mart works</h1>
+    <p>My Mart is a full-stack online grocery store: a <b>Flask REST API</b> (backend) talks to a <b>SQLite database</b>,
+      and a <b>HTML/CSS/JavaScript frontend</b> calls that API with <code style="background:rgba(255,255,255,.15);color:#fff">fetch()</code>.
+      Everything runs on your own computer at <b>http://localhost:5000</b>.</p>
+  </section>
+
+  <section class="card card-pad mt-lg">
+    <h2 style="font-size:22px">🏗️ Architecture</h2>
+    <div class="flow">
+      <div class="box">🌐 <b>Browser</b><div class="small muted">frontend/*.html<br>css + js</div></div>
+      <div class="arrow">⇄<div class="small">JSON over HTTP</div></div>
+      <div class="box">🐍 <b>Flask API</b><div class="small muted">backend/app/api/*<br>/api/...</div></div>
+      <div class="arrow">⇄<div class="small">SQLAlchemy ORM</div></div>
+      <div class="box">🗄️ <b>SQLite DB</b><div class="small muted">backend/instance/<br>mymart.db</div></div>
+      <div class="arrow">⇠<div class="small">first run</div></div>
+      <div class="box">📄 <b>Dataset</b><div class="small muted">data/*.csv<br>5 sets</div></div>
+    </div>
+    <p class="muted small center">The same Flask server also serves the frontend files, so there is only one thing to start.</p>
+  </section>
+
+  <div class="stack mt-lg">
+    <div class="card card-pad"><h3>🛍️ Customers can</h3>
+      <ul><li>Register / log in (passwords are hashed)</li><li>Search, filter by category, veg-only, in-stock; sort by price, rating, discount</li>
+        <li>Add to cart, change quantities (stock is checked)</li><li>Checkout with UPI QR code or Cash on Delivery</li>
+        <li>Track orders through Placed → Packed → Shipped → Delivered and cancel early orders</li></ul></div>
+    <div class="card card-pad"><h3>🛠️ Admins can</h3>
+      <ul><li>See revenue, orders, customers and average order value</li><li>Analyse sales by month, category, product, city, weekday and payment method</li>
+        <li>Add, edit and remove products; restock low-stock items</li><li>Move orders through the delivery workflow</li><li>View every customer and how much they spent</li></ul></div>
+    <div class="card card-pad"><h3>📊 Anyone can</h3>
+      <ul><li>Open the <a href="/dataset">Dataset explorer</a></li><li>Read what each of the 5 sets means, column by column</li>
+        <li>See live statistics and charts per set</li><li>Search the rows and download them as CSV</li></ul></div>
+  </div>
+
+  <section class="card card-pad mt-lg prose" style="max-width:none">
+    <h2 style="font-size:22px">🧰 Tech stack</h2>
+    <div class="table-wrap"><table class="table">
+      <tr><th>Layer</th><th>Technology</th><th>Why</th></tr>
+      <tr><td>Backend</td><td>Python 3.10+, Flask 3</td><td>Small, readable web framework - great for learning REST APIs</td></tr>
+      <tr><td>Database</td><td>SQLite + Flask-SQLAlchemy (ORM)</td><td>Zero setup: the database is a single file; models are Python classes</td></tr>
+      <tr><td>Auth</td><td>Flask-Login + Werkzeug password hashing</td><td>Secure session cookies; passwords never stored as plain text</td></tr>
+      <tr><td>Payments</td><td>qrcode + UPI deep link</td><td>Generates a real UPI QR (demo - payment is not verified)</td></tr>
+      <tr><td>Frontend</td><td>HTML5, CSS3, vanilla JavaScript</td><td>No build step, no Node.js needed - just open the browser</td></tr>
+      <tr><td>Charts</td><td>Hand-written SVG (frontend/js/charts.js)</td><td>Works offline, no external libraries</td></tr>
+      <tr><td>Tests</td><td>unittest (pytest compatible)</td><td>19 API tests covering shop, cart, checkout, admin and dataset</td></tr>
+    </table></div>
+    <p class="mt">Read the full documentation in the project's <code>README.md</code> and <code>docs/</code> folder (API reference, database design, dataset card).</p>
+  </section>
+</main>
+<footer id="footer"></footer>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

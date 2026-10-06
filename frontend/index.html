@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Mart - Fresh groceries online</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header id="navbar" class="navbar"></header>
+
+<main class="container">
+  <!-- Hero banner -->
+  <section class="hero">
+    <div>
+      <h1>Fresh groceries, delivered fast.</h1>
+      <p>Fruits, vegetables, dairy, staples and daily essentials - at prices below MRP.</p>
+      <div class="pills">
+        <span class="pill">🚚 Free delivery above ₹499</span>
+        <span class="pill">📱 Pay by UPI or Cash</span>
+        <span class="pill">↩️ Cancel before shipping</span>
+      </div>
+    </div>
+    <div class="art">🥦🍎🥛<br>🍞🌾🧴</div>
+  </section>
+
+  <!-- Search + filters -->
+  <div class="toolbar">
+    <div class="search-box"><input id="q" class="input" type="search" placeholder="Search for milk, rice, chips, soap…" autocomplete="off"></div>
+    <select id="sort" class="input" style="width:auto">
+      <option value="popular">Sort: Popular</option>
+      <option value="price_asc">Price: Low → High</option>
+      <option value="price_desc">Price: High → Low</option>
+      <option value="discount">Biggest discount</option>
+      <option value="rating">Top rated</option>
+      <option value="newest">Newest</option>
+      <option value="name">Name A–Z</option>
+    </select>
+    <label class="checkbox"><input type="checkbox" id="veg"> 🟢 Veg only</label>
+    <label class="checkbox"><input type="checkbox" id="instock"> In stock</label>
+  </div>
+  <div class="chips" id="chips"></div>
+
+  <div class="row" style="margin:6px 0 12px">
+    <h2 id="results-title" style="margin:0;font-size:20px">All products</h2>
+    <span class="muted small" id="results-count"></span>
+  </div>
+  <section class="products" id="grid"></section>
+  <div class="pagination" id="pager"></div>
+</main>
+
+<footer id="footer"></footer>
+<script src="/static/js/app.js"></script>
+<script>
+  // ---------------- Shop page ----------------
+  const state = { q: qs("q") || "", category: qs("category") || "", sort: "popular", veg: false, instock: false, page: 1 };
+  let categories = [];
+
+  async function loadCategories() {
+    categories = (await api("/api/categories")).categories;
+    const chip = (c) => `<button class="chip ${String(state.category) === String(c.id) ? "active" : ""}" data-id="${c.id}">
+        ${c.emoji} ${esc(c.name)} <span class="count">${c.product_count}</span></button>`;
+    $("#chips").innerHTML =
+      `<button class="chip ${state.category ? "" : "active"}" data-id="">🛍️ All</button>` + categories.map(chip).join("");
+    $$("#chips .chip").forEach(b => b.onclick = () => {
+      state.category = b.dataset.id; state.page = 1;
+      $$("#chips .chip").forEach(x => x.classList.toggle("active", x === b));
+      loadProducts();
+    });
+  }
+
+  async function loadProducts() {
+    const grid = $("#grid");
+    grid.innerHTML = Array(8).fill('<div class="skeleton"></div>').join("");
+    const params = new URLSearchParams({ sort: state.sort, page: state.page, per_page: 20 });
+    if (state.q) params.set("q", state.q);
+    if (state.category) params.set("category", state.category);
+    if (state.veg) params.set("veg", 1);
+    if (state.instock) params.set("in_stock", 1);
+
+    const data = await api("/api/products?" + params);
+    const cat = categories.find(c => String(c.id) === String(state.category));
+    $("#results-title").textContent = state.q ? `Results for “${state.q}”` : cat ? `${cat.emoji} ${cat.name}` : "All products";
+    $("#results-count").textContent = `${data.total} item${data.total === 1 ? "" : "s"}`;
+    grid.innerHTML = data.items.length
+      ? data.items.map(productCard).join("")
+      : `<div class="empty" style="grid-column:1/-1"><div class="big">🔎</div><h3>No products found</h3><p>Try a different search or category.</p></div>`;
+    pagination($("#pager"), data, (p) => { state.page = p; loadProducts(); window.scrollTo({ top: $(".toolbar").offsetTop - 80 }); });
+  }
+
+  $("#q").value = state.q;
+  $("#q").addEventListener("input", debounce(e => { state.q = e.target.value.trim(); state.page = 1; loadProducts(); }));
+  $("#sort").onchange = e => { state.sort = e.target.value; state.page = 1; loadProducts(); };
+  $("#veg").onchange = e => { state.veg = e.target.checked; state.page = 1; loadProducts(); };
+  $("#instock").onchange = e => { state.instock = e.target.checked; state.page = 1; loadProducts(); };
+
+  ready.then(async () => { await loadCategories(); await loadProducts(); });
+</script>
+</body>
+</html>

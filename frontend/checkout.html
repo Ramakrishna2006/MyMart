@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - My Mart</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header id="navbar" class="navbar"></header>
+<main class="container" id="page"><div class="skeleton mt-lg" style="height:300px"></div></main>
+<footer id="footer"></footer>
+<script src="/static/js/app.js"></script>
+<script>
+  let cart = null;
+
+  function render() {
+    const u = MyMart.user;
+    $("#page").innerHTML = `
+      <div class="layout-2">
+        <form class="card card-pad" id="form">
+          <h1 style="font-size:24px">🚚 Delivery details</h1>
+          <div id="error" class="alert alert-error hidden"></div>
+          <div class="grid-2">
+            <div class="field"><label>Full name</label><input class="input" name="delivery_name" required value="${esc(u.name)}"></div>
+            <div class="field"><label>Mobile</label><input class="input" name="delivery_phone" required maxlength="10" value="${esc(u.phone || "")}" placeholder="9876543210"></div>
+          </div>
+          <div class="field"><label>Address</label><textarea class="input" name="delivery_address" required placeholder="House no, street, area, landmark"></textarea></div>
+          <div class="field"><label>City</label><input class="input" name="delivery_city" required value="${esc(u.city || "")}" placeholder="Hyderabad"></div>
+
+          <h2 style="font-size:20px" class="mt-lg">💳 Payment</h2>
+          <div class="pay-options">
+            <label class="pay-option selected"><input type="radio" name="payment_method" value="UPI" checked> 📱 UPI (GPay / PhonePe / Paytm)</label>
+            <label class="pay-option"><input type="radio" name="payment_method" value="COD"> 💵 Cash on delivery</label>
+          </div>
+          <div id="upi-box">
+            <div class="qr-box">
+              <img src="/api/checkout/upi-qr.png?t=${Date.now()}" alt="UPI QR code">
+              <div class="mt"><b>Scan & pay ${money(cart.total)}</b></div>
+              <div class="muted small" id="upi-id"></div>
+            </div>
+            <div class="field"><label>Your UPI ID or transaction reference</label>
+              <input class="input" name="upi_ref" placeholder="yourname@okbank or 12-digit UTR"></div>
+            <div class="alert alert-info small">🧪 Demo project: the payment is <b>not</b> verified with a bank - any value is accepted.</div>
+          </div>
+          <button class="btn btn-block btn-lg mt" id="submit">Place order · ${money(cart.total)}</button>
+        </form>
+
+        <aside class="card card-pad sticky">
+          <h3>Order summary</h3>
+          ${cart.items.map(i => `<div class="summary-row small"><span>${i.product.emoji} ${esc(i.product.name)} × ${i.quantity}</span><span>${money(i.line_total)}</span></div>`).join("")}
+          <div class="summary-row mt"><span>Subtotal</span><span>${money(cart.subtotal)}</span></div>
+          <div class="summary-row"><span>Delivery</span><span>${cart.delivery_fee ? money(cart.delivery_fee) : "FREE"}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${money(cart.total)}</span></div>
+          <a class="btn btn-light btn-block mt" href="/cart">← Edit cart</a>
+        </aside>
+      </div>`;
+
+    api("/api/checkout/upi").then(d => $("#upi-id").textContent = `Pay to ${d.upi_id} (${d.payee})`).catch(() => {});
+
+    $$(".pay-option input").forEach(r => r.onchange = () => {
+      $$(".pay-option").forEach(o => o.classList.toggle("selected", o.contains(r) && r.checked));
+      $("#upi-box").classList.toggle("hidden", r.value !== "UPI");
+    });
+
+    $("#form").onsubmit = async (ev) => {
+      ev.preventDefault();
+      const body = Object.fromEntries(new FormData(ev.target));
+      $("#submit").disabled = true;
+      try {
+        const { order } = await api("/api/orders", { method: "POST", body });
+        setCartCount(0);
+        success(order);
+      } catch (e) {
+        $("#error").textContent = e.message;
+        $("#error").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        $("#submit").disabled = false;
+      }
+    };
+  }
+
+  function success(o) {
+    $("#page").innerHTML = `
+      <div class="card card-pad mt-lg center" style="max-width:620px;margin-left:auto;margin-right:auto">
+        <div style="font-size:70px">🎉</div>
+        <h1>Order placed!</h1>
+        <p class="muted">Thank you for shopping at My Mart.</p>
+        <div style="text-align:left;background:#f7faf8;border-radius:12px;padding:16px;margin:18px 0">
+          <div class="summary-row"><span>Order number</span><b>${esc(o.order_number)}</b></div>
+          <div class="summary-row"><span>Status</span>${statusBadge(o.status)}</div>
+          <div class="summary-row"><span>Payment</span><span>${esc(o.payment_method)} · ${statusBadge(o.payment_status)}</span></div>
+          <div class="summary-row"><span>Deliver to</span><span>${esc(o.delivery_city)}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${money(o.total)}</span></div>
+        </div>
+        <div class="row" style="justify-content:center">
+          <a class="btn btn-lg" href="/orders">📦 Track my orders</a>
+          <a class="btn btn-outline btn-lg" href="/">Continue shopping</a>
+        </div>
+      </div>`;
+  }
+
+  ready.then(async () => {
+    if (!requireLogin()) return;
+    cart = await api("/api/cart");
+    if (!cart.items.length) { location.href = "/cart"; return; }
+    render();
+  });
+</script>
+</body>
+</html>

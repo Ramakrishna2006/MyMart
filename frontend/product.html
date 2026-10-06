@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product - My Mart</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    .pd { display: grid; grid-template-columns: 1fr 1.2fr; gap: 28px; margin-top: 24px; }
+    .pd .pic { min-height: 340px; display: grid; place-items: center; font-size: 150px; background: linear-gradient(160deg, var(--green-50), #fff); border-radius: 18px; position: relative; overflow: hidden; }
+    .pd .pic img { width: 100%; height: 100%; object-fit: cover; }
+    .pd h1 { font-size: 30px; }
+    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 18px 0; }
+    @media (max-width: 800px) { .pd { grid-template-columns: 1fr; } .pd .pic { min-height: 220px; font-size: 110px; } }
+  </style>
+</head>
+<body>
+<header id="navbar" class="navbar"></header>
+<main class="container">
+  <p class="mt"><a href="/">← Back to shop</a></p>
+  <div id="detail"><div class="skeleton" style="height:360px"></div></div>
+  <div id="related-wrap" class="hidden">
+    <div class="section-title"><h2>You may also like</h2></div>
+    <section class="products" id="related"></section>
+  </div>
+</main>
+<footer id="footer"></footer>
+<script src="/static/js/app.js"></script>
+<script>
+  let qty = 1, product = null;
+
+  function renderQty() { $("#qty").textContent = qty; }
+
+  async function load() {
+    const id = qs("id");
+    try {
+      const data = await api(`/api/products/${id}`);
+      product = data.product;
+      document.title = `${product.name} - My Mart`;
+      const p = product;
+      $("#detail").innerHTML = `
+        <div class="pd">
+          <div class="pic">${p.image_url ? `<img src="${esc(p.image_url)}" alt="">` : p.emoji}
+            ${p.discount_pct ? `<span class="discount-tag" style="font-size:14px">${p.discount_pct}% OFF</span>` : ""}</div>
+          <div>
+            <div class="brand-name muted small" style="font-weight:700;text-transform:uppercase">${esc(p.brand || "")} · <a href="/?category=${p.category_id}">${esc(p.category)}</a></div>
+            <h1>${esc(p.name)} <span class="veg-dot ${p.is_veg ? "" : "nonveg"}" style="position:static;display:inline-grid;vertical-align:middle"></span></h1>
+            <div class="rating"><b>${p.rating.toFixed(1)} ★</b>${p.rating_count.toLocaleString("en-IN")} ratings · ${data.units_sold} sold on MyMart</div>
+            <div class="row mt" style="align-items:baseline">
+              <span class="price" style="font-size:30px">${money(p.price)}</span>
+              ${p.mrp > p.price ? `<span class="mrp" style="font-size:16px">MRP ${money(p.mrp)}</span><span class="status status-Delivered">Save ${money(p.mrp - p.price)}</span>` : ""}
+            </div>
+            <p class="muted small">Inclusive of all taxes · Pack size: <b>${esc(p.unit || "-")}</b></p>
+            <p>${esc(p.description || "")}</p>
+            <div class="facts">
+              <div class="mini-kpi"><div class="l">SKU</div><div class="v" style="font-size:14px">${esc(p.sku)}</div></div>
+              <div class="mini-kpi"><div class="l">In stock</div><div class="v">${p.stock}</div></div>
+              <div class="mini-kpi"><div class="l">Type</div><div class="v">${p.is_veg ? "🟢 Veg" : "🔴 Non-veg"}</div></div>
+            </div>
+            ${p.stock > 0 ? `
+            <div class="row">
+              <div class="stepper"><button id="minus">−</button><span id="qty">1</span><button id="plus">+</button></div>
+              <button class="btn btn-lg" id="add">🛒 Add to cart</button>
+              <a class="btn btn-outline btn-lg" href="/cart">Go to cart</a>
+            </div>` : `<div class="alert alert-error">This product is currently out of stock.</div>`}
+          </div>
+        </div>`;
+      if (p.stock > 0) {
+        $("#minus").onclick = () => { qty = Math.max(1, qty - 1); renderQty(); };
+        $("#plus").onclick = () => { qty = Math.min(p.stock, 10, qty + 1); renderQty(); };
+        $("#add").onclick = (e) => addToCart(p.id, qty, e.target);
+      }
+      if (data.related.length) {
+        $("#related-wrap").classList.remove("hidden");
+        $("#related").innerHTML = data.related.map(productCard).join("");
+      }
+    } catch (e) {
+      $("#detail").innerHTML = `<div class="empty"><div class="big">😕</div><h2>Product not found</h2><a class="btn" href="/">Back to shop</a></div>`;
+    }
+  }
+  ready.then(load);
+</script>
+</body>
+</html>

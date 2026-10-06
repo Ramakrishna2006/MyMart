@@ -1,0 +1,112 @@
+id,sku,name,brand,category_id,unit,mrp,price,discount_pct,stock,rating,rating_count,is_veg,description,created_at
+1,MM-01-0001,Banana Robusta,FreshFarm,1,1 dozen,60.00,60.00,0,77,3.7,431,1,"Hand-picked Banana Robusta, sorted and washed. Best stored in a cool place.",2026-03-07 16:49:26
+2,MM-01-0002,Apple Shimla,FreshFarm,1,1 kg,180.00,144.00,20,22,3.5,964,1,"Hand-picked Apple Shimla, sorted and washed. Best stored in a cool place.",2026-02-19 01:33:47
+3,MM-01-0003,Pomegranate,FreshFarm,1,1 kg,220.00,187.00,15,181,4.5,1730,1,"Hand-picked Pomegranate, sorted and washed. Best stored in a cool place.",2026-01-22 09:39:49
+4,MM-01-0004,Papaya,Orchard Valley,1,1 pc (~1 kg),55.00,44.00,20,16,4.5,665,1,"Hand-picked Papaya, sorted and washed. Best stored in a cool place.",2026-03-09 18:46:57
+5,MM-01-0005,Alphonso Mango,Orchard Valley,1,1 kg,450.00,405.00,10,70,4.8,1390,1,"Hand-picked Alphonso Mango, sorted and washed. Best stored in a cool place.",2026-01-10 22:10:01
+6,MM-01-0006,Watermelon,FreshFarm,1,1 pc (~3 kg),90.00,81.00,10,103,4.3,189,1,"Hand-picked Watermelon, sorted and washed. Best stored in a cool place.",2026-03-12 20:23:53
+7,MM-01-0007,Orange Nagpur,Orchard Valley,1,1 kg,120.00,102.00,15,111,3.5,1212,1,"Hand-picked Orange Nagpur, sorted and washed. Best stored in a cool place.",2026-03-22 12:39:10
+8,MM-01-0008,Green Grapes,Orchard Valley,1,500 g,80.00,64.00,20,32,3.5,945,1,"Hand-picked Green Grapes, sorted and washed. Best stored in a cool place.",2026-03-17 01:22:47
+9,MM-01-0009,Guava,Orchard Valley,1,1 kg,70.00,70.00,0,40,4.0,1869,1,"Hand-picked Guava, sorted and washed. Best stored in a cool place.",2026-03-03 17:15:07
+10,MM-01-0010,Kiwi,Orchard Valley,1,3 pcs,99.00,94.05,5,68,4.4,304,1,"Hand-picked Kiwi, sorted and washed. Best stored in a cool place.",2026-03-01 03:22:41
+11,MM-02-0011,Onion,FreshFarm,2,1 kg,40.00,34.00,15,56,4.1,1117,1,Fresh Onion sourced daily from local farms.,2026-03-04 03:18:27
+12,MM-02-0012,Tomato,FreshFarm,2,1 kg,35.00,31.50,10,29,3.7,143,1,Fresh Tomato sourced daily from local farms.,2026-03-20 03:53:33
+13,MM-02-0013,Potato,GreenLeaf,2,1 kg,30.00,27.00,10,69,4.8,2335,1,Fresh Potato sourced daily from local farms.,2026-03-27 02:05:04
+14,MM-02-0014,Green Chilli,GreenLeaf,2,100 g,12.00,11.40,5,116,4.7,1891,1,Fresh Green Chilli sourced daily from local farms.,2026-01-14 20:54:53
+15,MM-02-0015,Coriander Leaves,GreenLeaf,2,1 bunch,15.00,14.25,5,158,4.2,1766,1,Fresh Coriander Leaves sourced daily from local farms.,2026-03-29 04:04:44
+16,MM-02-0016,Carrot,GreenLeaf,2,500 g,30.00,27.00,10,50,4.2,384,1,Fresh Carrot sourced daily from local farms.,2026-03-15 09:06:00
+17,MM-02-0017,Cauliflower,FreshFarm,2,1 pc,40.00,40.00,0,55,4.6,1741,1,Fresh Cauliflower sourced daily from local farms.,2026-02-27 21:44:01
+18,MM-02-0018,Spinach (Palak),FreshFarm,2,1 bunch,20.00,18.00,10,134,4.2,2278,1,Fresh Spinach (Palak) sourced daily from local farms.,2026-03-25 13:45:43
+19,MM-02-0019,Ladies Finger (Bhindi),FreshFarm,2,500 g,35.00,35.00,0,152,4.5,1405,1,Fresh Ladies Finger (Bhindi) sourced daily from local farms.,2026-01-11 19:56:07
+20,MM-02-0020,Ginger,GreenLeaf,2,250 g,30.00,27.00,10,15,4.8,1090,1,Fresh Ginger sourced daily from local farms.,2026-02-18 14:27:00
+21,MM-03-0021,Toned Milk,DairyDay,3,1 L,56.00,47.60,15,175,3.8,2091,1,Toned Milk from DairyDay - chilled and delivered fresh.,2026-03-01 03:00:12
+22,MM-03-0022,Full Cream Milk,DairyDay,3,1 L,68.00,64.60,5,56,4.2,2184,1,Full Cream Milk from DairyDay - chilled and delivered fresh.,2026-01-01 01:19:57
+23,MM-03-0023,Fresh Curd,Gokul Fresh,3,500 g,40.00,35.20,12,3,4.7,1271,1,Fresh Curd from Gokul Fresh - chilled and delivered fresh.,2026-01-24 05:57:51
+24,MM-03-0024,Malai Paneer,DairyDay,3,200 g,90.00,85.50,5,35,3.5,2002,1,Malai Paneer from DairyDay - chilled and delivered fresh.,2026-03-21 05:28:19
+25,MM-03-0025,Salted Butter,DairyDay,3,100 g,58.00,49.30,15,47,4.4,2263,1,Salted Butter from DairyDay - chilled and delivered fresh.,2026-01-17 00:46:25
+26,MM-03-0026,Cheese Slices,Gokul Fresh,3,200 g,140.00,119.00,15,123,4.8,2220,1,Cheese Slices from Gokul Fresh - chilled and delivered fresh.,2026-03-15 07:53:43
+27,MM-03-0027,Farm Eggs,DairyDay,3,6 pcs,54.00,49.68,8,186,4.4,1806,0,Farm Eggs from DairyDay - chilled and delivered fresh.,2026-03-29 08:15:09
+28,MM-03-0028,Brown Eggs,Gokul Fresh,3,6 pcs,72.00,72.00,0,31,3.9,2280,0,Brown Eggs from Gokul Fresh - chilled and delivered fresh.,2026-01-23 08:12:22
+29,MM-03-0029,Buttermilk,DairyDay,3,500 ml,25.00,25.00,0,7,3.5,288,1,Buttermilk from DairyDay - chilled and delivered fresh.,2026-03-29 21:46:53
+30,MM-03-0030,Fresh Cream,DairyDay,3,200 ml,65.00,58.50,10,0,3.8,2000,1,Fresh Cream from DairyDay - chilled and delivered fresh.,2026-01-21 19:12:28
+31,MM-04-0031,Basmati Rice,Annapurna Mills,4,1 kg,140.00,112.00,20,77,4.6,1679,1,"Premium quality Basmati Rice, cleaned and packed hygienically.",2026-01-19 11:41:14
+32,MM-04-0032,Sona Masoori Rice,Annapurna Mills,4,5 kg,380.00,380.00,0,105,4.0,1924,1,"Premium quality Sona Masoori Rice, cleaned and packed hygienically.",2026-03-25 20:53:07
+33,MM-04-0033,Whole Wheat Atta,Annapurna Mills,4,5 kg,285.00,285.00,0,7,3.9,459,1,"Premium quality Whole Wheat Atta, cleaned and packed hygienically.",2026-01-25 03:24:40
+34,MM-04-0034,Maida,Annapurna Mills,4,1 kg,52.00,49.40,5,50,4.0,1152,1,"Premium quality Maida, cleaned and packed hygienically.",2026-02-14 22:00:05
+35,MM-04-0035,Rava (Sooji),Annapurna Mills,4,1 kg,60.00,60.00,0,155,3.5,2226,1,"Premium quality Rava (Sooji), cleaned and packed hygienically.",2026-03-23 04:05:07
+36,MM-04-0036,Poha,Annapurna Mills,4,500 g,45.00,45.00,0,75,3.6,2001,1,"Premium quality Poha, cleaned and packed hygienically.",2026-02-16 17:38:47
+37,MM-04-0037,Ragi Flour,Annapurna Mills,4,1 kg,75.00,67.50,10,57,4.0,1611,1,"Premium quality Ragi Flour, cleaned and packed hygienically.",2026-01-26 17:58:04
+38,MM-04-0038,Brown Rice,MyMart Select,4,1 kg,160.00,147.20,8,157,4.4,2005,1,"Premium quality Brown Rice, cleaned and packed hygienically.",2026-01-16 00:42:09
+39,MM-04-0039,Besan,Annapurna Mills,4,500 g,70.00,64.40,8,29,4.3,2232,1,"Premium quality Besan, cleaned and packed hygienically.",2026-01-06 22:02:29
+40,MM-04-0040,Idli Rice,MyMart Select,4,5 kg,320.00,320.00,0,3,4.2,2187,1,"Premium quality Idli Rice, cleaned and packed hygienically.",2026-01-16 06:50:41
+41,MM-05-0041,Toor Dal,MyMart Select,5,1 kg,165.00,140.25,15,62,3.5,290,1,"Unpolished Toor Dal, rich in protein. Cleaned and sorted.",2026-03-07 13:21:33
+42,MM-05-0042,Moong Dal,MyMart Select,5,1 kg,140.00,126.00,10,160,3.8,174,1,"Unpolished Moong Dal, rich in protein. Cleaned and sorted.",2026-03-02 03:15:48
+43,MM-05-0043,Chana Dal,MyMart Select,5,1 kg,110.00,99.00,10,159,4.2,1080,1,"Unpolished Chana Dal, rich in protein. Cleaned and sorted.",2026-01-20 19:57:30
+44,MM-05-0044,Urad Dal,Kisan Gold,5,1 kg,150.00,142.50,5,48,4.4,1240,1,"Unpolished Urad Dal, rich in protein. Cleaned and sorted.",2026-02-14 09:24:37
+45,MM-05-0045,Masoor Dal,Kisan Gold,5,1 kg,115.00,115.00,0,7,4.9,421,1,"Unpolished Masoor Dal, rich in protein. Cleaned and sorted.",2026-01-08 02:42:35
+46,MM-05-0046,Rajma,MyMart Select,5,500 g,95.00,80.75,15,104,4.7,1012,1,"Unpolished Rajma, rich in protein. Cleaned and sorted.",2026-02-05 21:03:37
+47,MM-05-0047,Kabuli Chana,Kisan Gold,5,500 g,90.00,85.50,5,154,4.5,2178,1,"Unpolished Kabuli Chana, rich in protein. Cleaned and sorted.",2026-01-01 18:13:44
+48,MM-05-0048,Green Moong Whole,Kisan Gold,5,500 g,75.00,75.00,0,49,3.8,450,1,"Unpolished Green Moong Whole, rich in protein. Cleaned and sorted.",2026-03-14 01:57:22
+49,MM-06-0049,Sunflower Oil,GoldDrop,6,1 L,165.00,151.80,8,68,4.5,845,1,GoldDrop Sunflower Oil for healthy everyday cooking.,2026-03-08 17:59:03
+50,MM-06-0050,Groundnut Oil,Pure Harvest,6,1 L,210.00,178.50,15,28,3.5,1746,1,Pure Harvest Groundnut Oil for healthy everyday cooking.,2026-03-22 12:31:16
+51,MM-06-0051,Mustard Oil,Pure Harvest,6,1 L,180.00,180.00,0,0,4.4,1084,1,Pure Harvest Mustard Oil for healthy everyday cooking.,2026-01-16 16:30:47
+52,MM-06-0052,Cow Ghee,Pure Harvest,6,500 ml,340.00,289.00,15,158,3.4,320,1,Pure Harvest Cow Ghee for healthy everyday cooking.,2026-03-27 17:47:13
+53,MM-06-0053,Coconut Oil,GoldDrop,6,500 ml,140.00,119.00,15,3,4.3,618,1,GoldDrop Coconut Oil for healthy everyday cooking.,2026-02-11 17:28:32
+54,MM-06-0054,Rice Bran Oil,GoldDrop,6,1 L,175.00,175.00,0,25,4.7,872,1,GoldDrop Rice Bran Oil for healthy everyday cooking.,2026-03-08 05:19:50
+55,MM-06-0055,Olive Oil (Pomace),GoldDrop,6,500 ml,450.00,450.00,0,158,4.7,1676,1,GoldDrop Olive Oil (Pomace) for healthy everyday cooking.,2026-03-02 06:14:46
+56,MM-07-0056,Turmeric Powder,Masala Mantra,7,200 g,52.00,49.40,5,60,4.7,113,1,Aromatic Turmeric Powder - no added colour or preservatives.,2026-01-18 09:56:26
+57,MM-07-0057,Red Chilli Powder,SpiceRoute,7,200 g,75.00,67.50,10,78,3.8,454,1,Aromatic Red Chilli Powder - no added colour or preservatives.,2026-02-07 03:23:12
+58,MM-07-0058,Coriander Powder,Masala Mantra,7,200 g,48.00,42.24,12,132,3.9,944,1,Aromatic Coriander Powder - no added colour or preservatives.,2026-01-22 15:26:58
+59,MM-07-0059,Garam Masala,Masala Mantra,7,100 g,70.00,66.50,5,86,4.7,1155,1,Aromatic Garam Masala - no added colour or preservatives.,2026-02-04 02:13:47
+60,MM-07-0060,Cumin Seeds (Jeera),SpiceRoute,7,100 g,65.00,55.25,15,22,3.6,1081,1,Aromatic Cumin Seeds (Jeera) - no added colour or preservatives.,2026-01-18 08:05:35
+61,MM-07-0061,Mustard Seeds,SpiceRoute,7,100 g,25.00,25.00,0,126,3.9,1296,1,Aromatic Mustard Seeds - no added colour or preservatives.,2026-02-12 08:52:17
+62,MM-07-0062,Sambar Powder,Masala Mantra,7,100 g,55.00,49.50,10,63,3.8,1798,1,Aromatic Sambar Powder - no added colour or preservatives.,2026-01-01 03:56:27
+63,MM-07-0063,Chicken Masala,Masala Mantra,7,100 g,68.00,61.20,10,185,4.8,1297,0,Aromatic Chicken Masala - no added colour or preservatives.,2026-03-06 09:48:17
+64,MM-07-0064,Black Pepper Whole,Masala Mantra,7,100 g,110.00,101.20,8,185,4.0,1660,1,Aromatic Black Pepper Whole - no added colour or preservatives.,2026-03-09 16:36:48
+65,MM-07-0065,Iodised Salt,SpiceRoute,7,1 kg,28.00,23.80,15,122,4.4,1564,1,Aromatic Iodised Salt - no added colour or preservatives.,2026-03-07 18:15:54
+66,MM-08-0066,Aloo Bhujia,Crunchy Bites,8,400 g,110.00,88.00,20,118,4.2,13,1,"Crunchy and tasty Aloo Bhujia, perfect for tea time.",2026-01-30 12:04:47
+67,MM-08-0067,Salted Potato Chips,Tea Time,8,90 g,30.00,28.50,5,163,4.3,1331,1,"Crunchy and tasty Salted Potato Chips, perfect for tea time.",2026-02-15 03:30:03
+68,MM-08-0068,Marie Biscuits,Tea Time,8,250 g,40.00,35.20,12,145,4.1,707,1,"Crunchy and tasty Marie Biscuits, perfect for tea time.",2026-03-05 23:14:00
+69,MM-08-0069,Chocolate Cream Biscuits,Crunchy Bites,8,150 g,35.00,32.20,8,177,4.3,394,1,"Crunchy and tasty Chocolate Cream Biscuits, perfect for tea time.",2026-03-21 11:03:53
+70,MM-08-0070,Roasted Peanuts,Crunchy Bites,8,200 g,60.00,55.20,8,65,3.6,201,1,"Crunchy and tasty Roasted Peanuts, perfect for tea time.",2026-01-24 18:31:28
+71,MM-08-0071,Khakhra Methi,Tea Time,8,200 g,75.00,60.00,20,33,4.1,2369,1,"Crunchy and tasty Khakhra Methi, perfect for tea time.",2026-01-19 21:04:00
+72,MM-08-0072,Instant Noodles,Tea Time,8,4-pack,56.00,49.28,12,52,4.4,34,1,"Crunchy and tasty Instant Noodles, perfect for tea time.",2026-03-28 16:02:53
+73,MM-08-0073,Butter Cookies,Crunchy Bites,8,200 g,95.00,85.50,10,193,4.2,217,1,"Crunchy and tasty Butter Cookies, perfect for tea time.",2026-02-24 02:50:58
+74,MM-08-0074,Mixture Namkeen,Crunchy Bites,8,400 g,100.00,100.00,0,133,4.4,2301,1,"Crunchy and tasty Mixture Namkeen, perfect for tea time.",2026-02-27 19:30:16
+75,MM-08-0075,Dark Chocolate Bar,Tea Time,8,100 g,120.00,105.60,12,199,4.7,1759,1,"Crunchy and tasty Dark Chocolate Bar, perfect for tea time.",2026-03-22 15:21:59
+76,MM-09-0076,Assam Tea,Juicy Farms,9,500 g,260.00,228.80,12,136,4.1,1024,1,Refreshing Assam Tea from Juicy Farms.,2026-03-23 13:01:20
+77,MM-09-0077,Filter Coffee Powder,Juicy Farms,9,500 g,320.00,294.40,8,148,4.1,991,1,Refreshing Filter Coffee Powder from Juicy Farms.,2026-01-27 15:51:30
+78,MM-09-0078,Instant Coffee,Fizzup,9,100 g,290.00,290.00,0,75,3.8,1321,1,Refreshing Instant Coffee from Fizzup.,2026-03-28 16:54:12
+79,MM-09-0079,Green Tea Bags,Juicy Farms,9,25 bags,165.00,165.00,0,74,4.0,637,1,Refreshing Green Tea Bags from Juicy Farms.,2026-03-10 14:04:33
+80,MM-09-0080,Orange Juice,Chai Point Co.,9,1 L,120.00,120.00,0,99,4.2,1715,1,Refreshing Orange Juice from Chai Point Co..,2026-01-07 01:05:22
+81,MM-09-0081,Mango Drink,Chai Point Co.,9,1.2 L,75.00,67.50,10,164,4.8,92,1,Refreshing Mango Drink from Chai Point Co..,2026-03-25 04:19:49
+82,MM-09-0082,Cola,Juicy Farms,9,750 ml,40.00,36.00,10,105,3.8,1609,1,Refreshing Cola from Juicy Farms.,2026-03-24 20:40:40
+83,MM-09-0083,Packaged Drinking Water,Fizzup,9,1 L,20.00,17.00,15,154,4.6,915,1,Refreshing Packaged Drinking Water from Fizzup.,2026-02-17 09:39:25
+84,MM-09-0084,Lemon Soda,Chai Point Co.,9,600 ml,30.00,27.60,8,22,4.0,1668,1,Refreshing Lemon Soda from Chai Point Co..,2026-03-12 07:27:53
+85,MM-09-0085,Tender Coconut Water,Chai Point Co.,9,200 ml,45.00,39.60,12,174,4.2,1625,1,Refreshing Tender Coconut Water from Chai Point Co..,2026-02-27 11:12:36
+86,MM-10-0086,White Bread,Oven Fresh,10,400 g,40.00,40.00,0,49,4.7,756,1,Freshly baked White Bread from Oven Fresh.,2026-01-05 21:10:18
+87,MM-10-0087,Brown Bread,Daily Bake,10,400 g,50.00,45.00,10,131,3.9,1564,1,Freshly baked Brown Bread from Daily Bake.,2026-01-28 00:23:05
+88,MM-10-0088,Pav Buns,Daily Bake,10,6 pcs,30.00,27.60,8,135,3.4,2221,1,Freshly baked Pav Buns from Daily Bake.,2026-01-06 01:22:05
+89,MM-10-0089,Milk Rusk,Daily Bake,10,300 g,55.00,52.25,5,181,3.5,139,1,Freshly baked Milk Rusk from Daily Bake.,2026-01-25 00:12:42
+90,MM-10-0090,Multigrain Bread,Oven Fresh,10,400 g,65.00,65.00,0,76,3.6,480,1,Freshly baked Multigrain Bread from Oven Fresh.,2026-02-24 18:08:39
+91,MM-10-0091,Plum Cake,Oven Fresh,10,300 g,150.00,132.00,12,109,3.7,481,0,Freshly baked Plum Cake from Oven Fresh.,2026-03-17 12:23:11
+92,MM-10-0092,Burger Buns,Oven Fresh,10,4 pcs,40.00,36.80,8,21,4.8,2370,1,Freshly baked Burger Buns from Oven Fresh.,2026-03-07 18:20:00
+93,MM-10-0093,Garlic Bread,Daily Bake,10,200 g,70.00,63.00,10,65,3.5,1006,1,Freshly baked Garlic Bread from Daily Bake.,2026-01-10 21:26:50
+94,MM-11-0094,Neem Soap,CleanCare,11,4 x 100 g,140.00,112.00,20,159,4.6,1434,1,CleanCare Neem Soap for daily personal care.,2026-02-21 17:23:11
+95,MM-11-0095,Herbal Shampoo,CleanCare,11,340 ml,210.00,189.00,10,7,3.9,1732,1,CleanCare Herbal Shampoo for daily personal care.,2026-03-21 20:10:11
+96,MM-11-0096,Toothpaste,CleanCare,11,150 g,95.00,95.00,0,107,4.4,1895,1,CleanCare Toothpaste for daily personal care.,2026-03-10 16:08:54
+97,MM-11-0097,Toothbrush Soft,Herbal Glow,11,pack of 3,85.00,76.50,10,148,4.8,1118,1,Herbal Glow Toothbrush Soft for daily personal care.,2026-03-01 19:10:47
+98,MM-11-0098,Coconut Hair Oil,CleanCare,11,300 ml,135.00,118.80,12,166,3.8,1017,1,CleanCare Coconut Hair Oil for daily personal care.,2026-03-22 15:44:36
+99,MM-11-0099,Aloe Vera Gel,Herbal Glow,11,150 g,160.00,147.20,8,77,4.5,2346,1,Herbal Glow Aloe Vera Gel for daily personal care.,2026-03-01 06:10:33
+100,MM-11-0100,Hand Wash Refill,CleanCare,11,750 ml,99.00,89.10,10,3,3.7,880,1,CleanCare Hand Wash Refill for daily personal care.,2026-02-04 10:48:07
+101,MM-11-0101,Body Lotion,CleanCare,11,250 ml,245.00,220.50,10,167,4.5,1143,1,CleanCare Body Lotion for daily personal care.,2026-02-23 23:05:13
+102,MM-11-0102,Face Wash,Herbal Glow,11,100 g,175.00,148.75,15,36,3.8,1676,1,Herbal Glow Face Wash for daily personal care.,2026-02-17 10:28:08
+103,MM-12-0103,Detergent Powder,Sparkle,12,1 kg,125.00,110.00,12,140,4.1,82,1,Sparkle Detergent Powder for a sparkling clean home.,2026-01-10 00:49:48
+104,MM-12-0104,Dishwash Liquid,HomeShine,12,750 ml,155.00,147.25,5,77,3.9,2394,1,HomeShine Dishwash Liquid for a sparkling clean home.,2026-02-05 19:52:47
+105,MM-12-0105,Floor Cleaner,HomeShine,12,1 L,189.00,160.65,15,123,4.9,2266,1,HomeShine Floor Cleaner for a sparkling clean home.,2026-02-02 02:47:58
+106,MM-12-0106,Toilet Cleaner,HomeShine,12,500 ml,98.00,86.24,12,79,3.7,800,1,HomeShine Toilet Cleaner for a sparkling clean home.,2026-01-31 15:16:48
+107,MM-12-0107,Scrub Pads,Sparkle,12,pack of 3,45.00,38.25,15,191,3.7,898,1,Sparkle Scrub Pads for a sparkling clean home.,2026-03-13 17:04:24
+108,MM-12-0108,Garbage Bags,HomeShine,12,30 pcs,110.00,101.20,8,149,4.3,423,1,HomeShine Garbage Bags for a sparkling clean home.,2026-03-22 20:09:52
+109,MM-12-0109,Aluminium Foil,Sparkle,12,9 m,95.00,87.40,8,60,3.9,2199,1,Sparkle Aluminium Foil for a sparkling clean home.,2026-01-13 06:57:34
+110,MM-12-0110,Matchbox,HomeShine,12,pack of 10,20.00,20.00,0,156,3.8,529,1,HomeShine Matchbox for a sparkling clean home.,2026-03-03 22:20:38
+111,MM-12-0111,Liquid Detergent,HomeShine,12,1 L,210.00,210.00,0,161,3.8,1972,1,HomeShine Liquid Detergent for a sparkling clean home.,2026-02-12 18:22:00

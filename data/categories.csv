@@ -1,0 +1,13 @@
+id,name,slug,emoji,description
+1,Fruits,fruits,🍎,Fresh seasonal and imported fruits
+2,Vegetables,vegetables,🥦,Farm-fresh everyday vegetables and greens
+3,Dairy & Eggs,dairy-eggs,🥛,"Milk, curd, paneer, butter, cheese and eggs"
+4,"Rice, Atta & Grains",rice-atta-grains,🌾,"Rice, wheat flour, millets and grains"
+5,Pulses & Dals,pulses-dals,🫘,"Toor, moong, chana, urad and other lentils"
+6,Oils & Ghee,oils-ghee,🫒,Cooking oils and ghee
+7,Spices & Masalas,spices-masalas,🌶️,"Whole spices, powders and masala blends"
+8,Snacks & Biscuits,snacks-biscuits,🍪,"Namkeen, chips, biscuits and cookies"
+9,Beverages,beverages,🥤,"Tea, coffee, juices and soft drinks"
+10,Bakery,bakery,🍞,"Breads, buns, rusks and cakes"
+11,Personal Care,personal-care,🧴,"Soaps, shampoos, toothpaste and skin care"
+12,Household,household,🧽,"Detergents, cleaners and kitchen essentials"

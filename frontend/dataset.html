@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dataset explorer - My Mart</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header id="navbar" class="navbar"></header>
+<main class="container">
+  <section class="ds-hero">
+    <h1>📊 MyMart dataset explorer</h1>
+    <p>The store runs on <b>5 related data sets</b>. They start life as CSV files in the <code style="background:rgba(255,255,255,.15);color:#fff">data/</code>
+      folder, are loaded into the SQLite database on first run, and change live as people shop.
+      Every set below explains <b>what it is</b>, <b>why the project needs it</b>, <b>every column</b>, live statistics and the actual rows.</p>
+    <div class="ds-nav" id="ds-nav"></div>
+  </section>
+
+  <section class="card card-pad mt-lg">
+    <h2 style="font-size:22px">🔗 How the sets connect</h2>
+    <p class="muted">Primary keys (<b>PK</b>) uniquely identify a row. Foreign keys (<span style="color:var(--blue);font-weight:600">FK</span>) point to a row in another set.</p>
+    <div class="er" id="er"></div>
+    <div class="er-links">categories (1) ──< (many) products          one category has many products
+users      (1) ──< (many) orders            one customer places many orders
+orders     (1) ──< (many) order_items       one order contains many lines
+products   (1) ──< (many) order_items       one product appears in many orders
+→ order_items is the "bridge" that makes orders ↔ products a many-to-many relationship</div>
+  </section>
+
+  <div id="sets"><div class="skeleton mt-lg" style="height:400px"></div></div>
+
+  <section class="card card-pad mt-lg">
+    <h2 style="font-size:22px">♻️ Regenerate or reset the data</h2>
+    <ul>
+      <li><code>python data/generate_dataset.py</code> - rebuilds the 5 CSV files (fixed random seed, so the output is always the same).</li>
+      <li><code>python manage.py reset-db</code> - wipes the database and loads the CSV files again.</li>
+      <li><code>python manage.py export</code> - saves the <i>live</i> tables (including new orders) to <code>exports/*.csv</code>.</li>
+    </ul>
+    <p class="muted small">All people, phone numbers, e-mails and brands are synthetic. Prices are realistic for Indian groceries in 2026 but are not real offers.</p>
+  </section>
+</main>
+<footer id="footer"></footer>
+<script src="/static/js/app.js"></script>
+<script src="/static/js/charts.js"></script>
+<script>
+  const tableState = {};
+
+  function setSection(d) {
+    const list = (arr) => `<ul>${arr.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    return `
+    <section class="card ds-section" id="set-${d.key}">
+      <div class="ds-head">
+        <span class="num">SET ${d.number}</span>
+        <h2>${d.emoji} ${esc(d.title)}</h2>
+        <code>${esc(d.file)}</code>
+        <span class="muted">${d.rows.toLocaleString("en-IN")} rows · ${d.columns.length} columns</span>
+      </div>
+      <div class="ds-grid">
+        <div class="ds-block">
+          <p style="font-size:16px;margin-top:0"><b>${esc(d.summary)}</b></p>
+          <h4>Why it exists</h4><p style="margin:0">${esc(d.purpose)}</p>
+          <h4>Where the app uses it</h4>${list(d.used_in)}
+          <h4>Relationships</h4><ul>${d.relations.map(r => `<li><code>${esc(r)}</code></li>`).join("")}</ul>
+          ${d.rules ? `<h4>Business rules</h4>${list(d.rules)}` : ""}
+          ${d.privacy ? `<h4>Privacy</h4><div class="alert alert-info small" style="margin:0">🔒 ${esc(d.privacy)}</div>` : ""}
+          <h4>Questions you can answer with it</h4>${list(d.questions)}
+        </div>
+        <div class="ds-block">
+          <h4 style="margin-top:0">Live statistics</h4>
+          <div class="mini-kpis">${d.stats.cards.map(c => `<div class="mini-kpi"><div class="l">${esc(c.label)}</div><div class="v">${esc(c.value)}</div></div>`).join("")}</div>
+          ${d.stats.chart ? `<h4>${esc(d.stats.chart.title)}</h4><div id="chart-${d.key}"></div>` : ""}
+        </div>
+      </div>
+      <div class="ds-table" style="padding-bottom:12px">
+        <h4 class="muted" style="font-size:13px;text-transform:uppercase;letter-spacing:.6px">Column dictionary</h4>
+        <div class="table-wrap"><table class="table">
+          <tr><th>Column</th><th>Type</th><th>Meaning</th><th>Example</th></tr>
+          ${d.columns.map(c => `<tr><td><code>${esc(c.name)}</code>${c.name === "id" ? ' <b class="small">PK</b>' : c.description.includes("Foreign key") ? ' <b class="small" style="color:var(--blue)">FK</b>' : ""}</td>
+            <td class="small">${esc(c.type)}</td><td>${esc(c.description)}</td><td class="small muted">${esc(c.example)}</td></tr>`).join("")}
+        </table></div>
+      </div>
+      <div class="ds-table-tools">
+        <h4 class="muted" style="font-size:13px;text-transform:uppercase;letter-spacing:.6px;margin:0">Data (live from the database)</h4>
+        <span class="spacer"></span>
+        <input class="input" style="max-width:240px;padding:8px 12px" placeholder="Search ${esc(d.title.toLowerCase())}…" oninput="searchSet('${d.key}', this.value)">
+        <a class="btn btn-sm btn-outline" href="/api/dataset/${d.key}/download">⬇ Live CSV</a>
+        <a class="btn btn-sm btn-light" href="/api/dataset/${d.key}/original">⬇ Original ${esc(d.file)}</a>
+      </div>
+      <div class="ds-table">
+        <div class="table-wrap"><table class="table" id="rows-${d.key}"></table></div>
+        <div class="pagination" id="pager-${d.key}" style="margin:14px 0 0"></div>
+      </div>
+    </section>`;
+  }
+
+  async function loadRows(key) {
+    const st = tableState[key];
+    const params = new URLSearchParams({ page: st.page, per_page: 10 });
+    if (st.q) params.set("q", st.q);
+    const data = await api(`/api/dataset/${key}?` + params);
+    $(`#rows-${key}`).innerHTML =
+      `<tr>${data.columns.map(c => `<th>${esc(c)}</th>`).join("")}</tr>` +
+      (data.items.length ? data.items.map(r => `<tr>${data.columns.map(c => `<td>${esc(r[c])}</td>`).join("")}</tr>`).join("")
+        : `<tr><td colspan="${data.columns.length}" class="center muted">No matching rows</td></tr>`);
+    pagination($(`#pager-${key}`), data, p => { st.page = p; loadRows(key); });
+  }
+
+  const searchSet = debounce((key, q) => { tableState[key] = { page: 1, q: q.trim() }; loadRows(key); });
+
+  function erDiagram(sets) {
+    $("#er").innerHTML = sets.map(d => `
+      <div class="er-table"><div class="h">${d.emoji} ${d.key === "customers" ? "users (customers)" : d.key}</div>
+        ${d.columns.map(c => {
+          const pk = c.name === "id", fk = c.description.includes("Foreign key");
+          return `<div class="c"><span class="${pk ? "pk" : fk ? "fk" : ""}">${esc(c.name)}</span><span class="muted small">${pk ? "PK" : fk ? "FK" : esc(c.type.split(" ")[0])}</span></div>`;
+        }).join("")}
+      </div>`).join("");
+  }
+
+  ready.then(async () => {
+    const { datasets } = await api("/api/dataset");
+    $("#ds-nav").innerHTML = datasets.map(d => `
+      <a href="#set-${d.key}"><div class="n">Set ${d.number}</div><div class="t">${d.emoji} ${esc(d.title)}</div>
+      <div class="r">${d.rows.toLocaleString("en-IN")} rows · ${esc(d.file)}</div></a>`).join("");
+    erDiagram(datasets);
+    $("#sets").innerHTML = datasets.map(setSection).join("");
+    for (const d of datasets) {
+      const ch = d.stats.chart;
+      if (ch) {
+        const el = $(`#chart-${d.key}`);
+        if (d.key === "orders") lineChart(el, ch.data.map(x => ({ ...x, label: x.label.slice(2) })), { format: moneyShort, height: 220 });
+        else if (ch.data.length > 7) hbarList(el, ch.data);
+        else barChart(el, ch.data, { height: 210 });
+      }
+      tableState[d.key] = { page: 1, q: "" };
+      loadRows(d.key);
+    }
+    if (location.hash) setTimeout(() => $(location.hash)?.scrollIntoView(), 50);
+  });
+</script>
+</body>
+</html>
