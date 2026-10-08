@@ -71,7 +71,7 @@ function renderNavbar() {
   el.className = "navbar";
   el.innerHTML = `
     <div class="container">
-      <a class="brand" href="/"><span class="logo">🛒</span> My Mart</a>
+      <a class="brand" href="/"><img class="logo" src="/static/img/logo.svg" alt="" width="36" height="36"> My Mart</a>
       <button class="nav-toggle" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
       <nav class="nav-links">
         ${link("/", "🏪 Shop", "shop")}
@@ -100,7 +100,7 @@ function renderFooter() {
   el.className = "site-footer";
   el.innerHTML = `
     <div class="container">
-      <div><strong style="color:#fff">🛒 My Mart</strong><br>Online grocery store - Flask + SQLite + vanilla JS.</div>
+      <div><strong style="color:#fff;display:inline-flex;align-items:center;gap:8px"><img src="/static/img/logo.svg" alt="" width="22" height="22"> My Mart</strong><br>Online grocery store - Flask + SQLite + vanilla JS.</div>
       <div><a href="/dataset">Dataset explorer</a> · <a href="/about">How it works</a> · <a href="/api/health">API status</a></div>
       <div class="small">Demo project · payments are simulated · data is synthetic</div>
     </div>`;

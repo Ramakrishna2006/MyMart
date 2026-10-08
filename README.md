@@ -1,6 +1,23 @@
-# 🛒 My Mart — Full-Stack Online Grocery Store
+<p align="center">
+  <img src="frontend/img/logo.svg" alt="My Mart logo" width="140">
+</p>
+
+<h1 align="center">My Mart</h1>
+
+<p align="center"><b>Full-stack online grocery store, built to understand databases and SQL</b></p>
+
+<p align="center">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white">
+  <img alt="Flask" src="https://img.shields.io/badge/Flask-3-000000?logo=flask&logoColor=white">
+  <img alt="SQLite" src="https://img.shields.io/badge/SQLite-SQL-003B57?logo=sqlite&logoColor=white">
+  <img alt="SQLAlchemy" src="https://img.shields.io/badge/SQLAlchemy-ORM-D71F00">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-19%20passing-0c8a4f">
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-blue">
+</p>
 
 My Mart is an online grocery store you can run on your own computer. A **Flask REST API** handles the backend, a **SQLite database** stores the data, and a plain **HTML/CSS/JavaScript frontend** talks to the API. A **5-part sample dataset** is loaded on first run, and every part of it can be browsed in the app's **Dataset Explorer**.
+
+> 🎓 **A learning project for understanding databases and SQL.** It shows how tables, primary and foreign keys, relationships, constraints, transactions and SQL queries (`SELECT`, `JOIN`, `GROUP BY`, `INSERT`, `UPDATE`) work inside a real application, with a real dataset you can explore. See [docs/DATABASE.md](docs/DATABASE.md) for the SQL commands.
 
 > Runs at **http://localhost:5000**. You only need Python. There's no Node.js, no build step, and no external database.
 
@@ -77,7 +94,7 @@ The script creates a virtual environment, installs the libraries and starts the 
 
 ```bash
 # 1. Get the code
-git clone https://github.com/<your-username>/MyMart.git
+git clone https://github.com/Ramakrishna2006/MyMart.git
 cd MyMart
 
 # 2. Create and activate a virtual environment
@@ -398,7 +415,7 @@ git init
 git add .
 git commit -m "My Mart: full-stack grocery store with dataset explorer"
 git branch -M main
-git remote add origin https://github.com/<your-username>/MyMart.git
+git remote add origin https://github.com/Ramakrishna2006/MyMart.git
 git push -u origin main
 ```
 
